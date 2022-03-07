@@ -1,16 +1,32 @@
 import processing.core.PApplet;
+import processing.core.PFont;
+/**
+ * 
+ * Drawing Random bricks on the screen and changing the colour based on the position. Also a clock
+ * @author G. Lui 
+ * Date Due: 7 March, 2022
+ * 
+ */
 
 public class Sketch extends PApplet {
-	
+
+  // global variables
+  // impliment font
+  public PFont clockFont;
+
+  // random background colour
   public float backgroundColourR = random(0, 255);
   public float backgroundColourG = random(0, 255);
   public float backgroundColourB = random(0, 255);
 
+  // brick 1 positions
   public float brickX = 0;
   public float brickY = 0;
 
+  // brick 2 positions
   public float brickXTwo = 0;
   public float brickYTwo = 0; 
+
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
@@ -25,6 +41,11 @@ public class Sketch extends PApplet {
    */
   public void setup() {
     background(210, 255, 173);
+    
+    //define font
+    clockFont = createFont("Lato Bold", 100, true);
+    textFont(clockFont);
+    textAlign(CENTER, BASELINE);
   }
 
   /**
@@ -33,6 +54,7 @@ public class Sketch extends PApplet {
 
   public void draw() {
 
+    // first randomization to avoid endless loop
     if (brickX == 0 || brickY == 0){
 
       brickX = random(0, width - 100);
@@ -42,6 +64,7 @@ public class Sketch extends PApplet {
     }
 
     
+    // change background to a new colour if brick one is not in bottom right and brick two is not in top left else return black background
     if (brickX >= width / 2 || brickY >= height / 2 || brickXTwo <= width / 2 || brickYTwo <= height / 2){
 
       background(backgroundColourR, backgroundColourG, backgroundColourB);
@@ -53,16 +76,26 @@ public class Sketch extends PApplet {
     }
 
     // clock
-    textSize(24);
+
+    // define clock string
+    String time = hour() + ":" + minute() + ":" + second() + " AM";
+
+    //clock conditions
     if (hour() > 12){
 
-      text(hour() - 12 + ":" + minute() + ":" + second() + " PM", width - 175, 50);
+      time = hour() - 12 + ":" + minute() + ":" + second() + " PM";
+      text(time, (width/2), (height/2));
     } else if (hour() == 12){
 
-      text(hour()+ ":" + minute() + ":" + second() + " PM", width - 175, 50);
+      time = hour()+ ":" + minute() + ":" + second() + " PM";
+      text(time, (width/2), (height/2));
+    } else if (hour() == 0){
+
+      time = "12:" + minute() + ":" + second() + " AM";
+      text(time, (width/2), (height/2));
     } else {
 
-      text(hour() + ":" + minute() + ":" + second() + " AM", width - 175, 50);
+      text(time, (width/2), (height/2));
     }
 
     // draw brick one
@@ -70,13 +103,10 @@ public class Sketch extends PApplet {
     
     // draw brick two
     bricks(brickXTwo, brickYTwo);
-
- 
-    
-    
   }
-
+  // randmomize position and background colour when mouse is released
   public void mouseReleased(){
+
     brickX = random(0, width - 100);
     brickY = random(0, height - 100);
 
@@ -88,8 +118,7 @@ public class Sketch extends PApplet {
     backgroundColourB = random(0, 255);
   }
 
-  // define other methods down here.
-
+  // draw bricks
   private void bricks(float cubeX, float cubeY){
 
     //brick outline
